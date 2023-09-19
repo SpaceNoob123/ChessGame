@@ -46,11 +46,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
+    <Compile Include="ChessUtils.cs" />
+    <Compile Include="FormHostServer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="FormHostServer.Designer.cs">
+      <DependentUpon>FormHostServer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormJoinServer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormJoinServer.Designer.cs">
+      <DependentUpon>FormJoinServer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormLauncher.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormLauncher.Designer.cs">
+      <DependentUpon>FormLauncher.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormUDPClient.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormUDPClient.Designer.cs">
+      <DependentUpon>FormUDPClient.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -75,6 +94,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
