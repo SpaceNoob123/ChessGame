@@ -1,10 +1,10 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
+using System;
 
-namespace Chess
+namespace ChessServerTest
 {
-    public partial class ChessView : Form
+    public class ChessGame : Form
     {
         public Image chessSprites;
         public int[,] map = new int[8, 8]
@@ -26,9 +26,9 @@ namespace Chess
         public Button prevButton;
         private bool isKingUnderCheck = false;
         public bool isMoving = false;
-/*        public bool isFirstMove = true;*/
+        /*        public bool isFirstMove = true;*/
 
-        public ChessView()
+        public ChessGame()
         {
             InitializeComponent();
             chessSprites = new Bitmap("C:\\Users\\marku\\Desktop\\Chess\\Sprites\\chess.png");
@@ -153,7 +153,7 @@ namespace Chess
 
                         if (!isChecking)
                         {
-                            SwitchPlayer(); 
+                            SwitchPlayer();
                         }
                         //else
                         //{
@@ -289,14 +289,14 @@ namespace Chess
             {
                 if (map[currentRow, currentCol] != 0)
                 {
-                    return false; 
+                    return false;
                 }
 
                 currentRow += dy;
                 currentCol += dx;
             }
 
-            return true; 
+            return true;
         }
         private bool isFirstMove(int IcurrFigure, int JcurrFigure, int currFigure)
         {
@@ -366,7 +366,7 @@ namespace Chess
                     break;
             }
         }
-        
+
         public void ShowHorseSteps(int IcurrFigure, int JcurrFigure)
         {
             if (InsideBorder(IcurrFigure - 2, JcurrFigure + 1))
@@ -512,7 +512,7 @@ namespace Chess
             int kingCol = kingPosition.Item2;
 
 
-            int pawnDirection = (player == 1) ? 1 : -1; 
+            int pawnDirection = (player == 1) ? 1 : -1;
             if (InsideBorder(kingRow + pawnDirection, kingCol - 1) && map[kingRow + pawnDirection, kingCol - 1] % 10 == 6 && map[kingRow + pawnDirection, kingCol - 1] / 10 != player)
             {
                 return true;
@@ -640,11 +640,11 @@ namespace Chess
         }
         public bool IsSquareUnderAttack(int row, int col, int attackingPlayer)
         {
-            int[] dr = { -1, -1, 1, 1, -1, 0, 1, 0, 0, -1, 0, 1, -1, -1, 1, 1 }; 
-            int[] dc = { -1, 1, -1, 1, 0, -1, 0, 1, -1, 0, 1, 0, -1, 1, -1, 1 }; 
+            int[] dr = { -1, -1, 1, 1, -1, 0, 1, 0, 0, -1, 0, 1, -1, -1, 1, 1 };
+            int[] dc = { -1, 1, -1, 1, 0, -1, 0, 1, -1, 0, 1, 0, -1, 1, -1, 1 };
 
-            int[] linearDr = { -1, 1, 0, 0 }; 
-            int[] linearDc = { 0, 0, -1, 1 }; 
+            int[] linearDr = { -1, 1, 0, 0 };
+            int[] linearDc = { 0, 0, -1, 1 };
 
 
             int pawnDirection = (attackingPlayer == 1) ? 1 : -1;
@@ -693,7 +693,7 @@ namespace Chess
                     }
                     else if ((i == 0 && piece % 10 == 3) || (i == 1 && piece % 10 == 3))
                     {
-                        return true; 
+                        return true;
                     }
                     else
                     {
@@ -735,7 +735,7 @@ namespace Chess
 
 
 
-            return false; 
+            return false;
         }
         public void ShowVerticalHorizontal(int IcurrFigure, int JcurrFigure, bool isOneStep = false)
         {
@@ -829,6 +829,18 @@ namespace Chess
         {
             this.Controls.Clear();
             Init();
+        }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // ChessGame
+            // 
+            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.Name = "ChessGame";
+            this.ResumeLayout(false);
+
         }
     }
 }
