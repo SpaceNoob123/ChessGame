@@ -6,7 +6,14 @@ using System.Threading.Tasks;
 
 namespace Chess.Core
 {
-    internal class IPiece
+    public interface IPiece
     {
+        char Color { get; set; }
+
+        BoardLocation CurrentLocation { get; set; }
+
+        char Symbol { get; }
+
+        IList<Tile> GetValidMoves(Board board);
     }
 }
