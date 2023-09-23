@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using Chess.Core.Pieces;
+﻿using Chess.Core.Pieces;
+using Newtonsoft.Json;
 
 namespace Chess.Core
 {
@@ -16,7 +11,6 @@ namespace Chess.Core
 
     public class Board
     {
-
 
         public delegate void KingChecked(King? kingThatIsChecked);
         public event KingChecked? OnKingChecked;
@@ -35,7 +29,6 @@ namespace Chess.Core
         private bool _gameOver = false;
         private char? _winner = null;
 
-
         public Tile[,] Tiles { get { return _tiles; } set { _tiles = value; } }
         public int Size { get; set; }
         public char? KingInCheck { get => _kingInCheck; set => _kingInCheck = value; }
@@ -43,8 +36,6 @@ namespace Chess.Core
         public char? Winner { get => _winner; set => _winner = value; }
         public BoardLocation WhiteKingLocation { get => _whiteKingLocation; set => _whiteKingLocation = value; }
         public BoardLocation BlackKingLocation { get => _blackKingLocation; set => _blackKingLocation = value; }
-
-
         public Board(int size, bool addDefaultPieces)
         {
             _tiles = new Tile[size, size];
@@ -58,7 +49,6 @@ namespace Chess.Core
                 _whiteKingLocation = new BoardLocation(7, 4);
             }
         }
-
         public Board(Tile[,] tiles)
         {
             _tiles = tiles;
@@ -83,41 +73,43 @@ namespace Chess.Core
 
         private void AddDefaultPieces()
         {
-
             for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 8; j++)
                 {
                     if (i == 1)
-                        _tiles[i, j].Piece = new Pawn('b', i, j);
+                        _tiles[i, j].Piece = new Pawn('b', i, j); // adds 8 player black pawns to 2nd row
                     if (i == 6)
-                        _tiles[i, j].Piece = new Pawn('w', i, j);
+                        _tiles[i, j].Piece = new Pawn('w', i, j); // adds 8 white pawns to 7th row
 
+                    // player 1's backrow
                     if (i == 7)
                     {
                         if (j == 0 || j == 7)
-                            _tiles[i, j].Piece = new Rook('w', i, j);
+                            _tiles[i, j].Piece = new Rook('w', i, j); // adds both white rooks
                         if (j == 1 || j == 6)
-                            _tiles[i, j].Piece = new Knight('w', i, j);
+                            _tiles[i, j].Piece = new Knight('w', i, j); // adds both white knights
                         if (j == 2 || j == 5)
-                            _tiles[i, j].Piece = new Bishop('w', i, j);
+                            _tiles[i, j].Piece = new Bishop('w', i, j); // adds both white bishops
                         if (j == 3)
-                            _tiles[i, j].Piece = new Queen('w', i, j);
+                            _tiles[i, j].Piece = new Queen('w', i, j); // adds white queen
                         if (j == 4)
-                            _tiles[i, j].Piece = new King('w', i, j);
+                            _tiles[i, j].Piece = new King('w', i, j); // adds white king
                     }
+
+                    // player 2's backrow
                     if (i == 0)
                     {
                         if (j == 0 || j == 7)
-                            _tiles[i, j].Piece = new Rook('b', i, j);
+                            _tiles[i, j].Piece = new Rook('b', i, j); // adds both black rooks
                         if (j == 1 || j == 6)
-                            _tiles[i, j].Piece = new Knight('b', i, j);
+                            _tiles[i, j].Piece = new Knight('b', i, j); // adds both black knights
                         if (j == 2 || j == 5)
-                            _tiles[i, j].Piece = new Bishop('b', i, j);
+                            _tiles[i, j].Piece = new Bishop('b', i, j); // adds both black bishops
                         if (j == 3)
-                            _tiles[i, j].Piece = new Queen('b', i, j);
+                            _tiles[i, j].Piece = new Queen('b', i, j); // adds black queen
                         if (j == 4)
-                            _tiles[i, j].Piece = new King('b', i, j);
+                            _tiles[i, j].Piece = new King('b', i, j); // adds black king
                     }
                 }
             }
@@ -135,7 +127,8 @@ namespace Chess.Core
         public bool TryMakeMove(Tile? from, Tile? to)
         {
             if (_gameOver) return false;
-            if (from.Piece is null) return false;
+            if (from.Piece is null) return false;  
+            
 
             if (!Movement.MoveIsValid(this, from, to))
                 return false;
@@ -143,8 +136,8 @@ namespace Chess.Core
             if (Movement.MovePutsKingInCheck(this, from, to))
                 return false;
 
-            if (from.Piece.Color == to.Piece?.Color) return false;
-            if (to.Piece is King) return false;
+            if (from.Piece.Color == to.Piece?.Color) return false; 
+            if (to.Piece is King) return false; 
 
             MovePiece(from, to);
 
@@ -183,7 +176,7 @@ namespace Chess.Core
             if (from.Piece != null)
                 from.Piece.CurrentLocation = new BoardLocation(from.Row, from.Column);
 
-            to.Piece = lastMove.Item3;
+            to.Piece = lastMove.Item3;            
 
             if (from.Piece is King)
                 UpdateKingPosition(from.Piece.Color, from.Row, from.Column);
@@ -210,6 +203,8 @@ namespace Chess.Core
 
             return piece;
         }
+
+        
         public IPiece AddPiece(int row, int col, IPiece piece)
         {
             if (row >= Size || col >= Size)
@@ -261,14 +256,12 @@ namespace Chess.Core
             }
             return null;
         }
-
         public void RemovePiece(IPiece piece)
         {
             var tile = GetTileByPiece(piece);
             if (tile != null)
                 tile.Piece = null;
         }
-
         public void RemovePiece(int row, int col)
         {
             var tile = GetTile(row, col);
@@ -276,16 +269,12 @@ namespace Chess.Core
                 tile.Piece = null;
         }
 
-
-
         internal void MovePiece(Tile from, Tile to)
         {
-
             var fromLoc = new BoardLocation(from.Row, from.Column);
             var toLoc = new BoardLocation(to.Row, to.Column);
             IPiece? capturedPiece = to.Piece;
             MoveStack.Push(Tuple.Create(fromLoc, toLoc, capturedPiece));
-
 
             to.Piece = from.Piece;
             to.Piece.CurrentLocation = new BoardLocation(to.Row, to.Column);
@@ -297,7 +286,6 @@ namespace Chess.Core
 
         internal void MovePiece(BoardLocation from, BoardLocation to)
         {
-
             var fromLoc = new BoardLocation(from.Row, from.Column);
             var toLoc = new BoardLocation(to.Row, to.Column);
 
@@ -306,6 +294,7 @@ namespace Chess.Core
 
             var toTile = GetTile(to);
             var fromTile = GetTile(from);
+
             toTile.Piece = fromTile.Piece;
             toTile.Piece.CurrentLocation = new BoardLocation(toTile.Row, toTile.Column);
             fromTile.Piece = null;
@@ -339,6 +328,8 @@ namespace Chess.Core
 
             return false;
         }
+
+
         internal List<Move> GenerateAllValidMoves(char? playerColor = null)
         {
             List<Move> moves = new List<Move>();

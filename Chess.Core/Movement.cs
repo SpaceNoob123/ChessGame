@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Chess.Core.Pieces;
+using System;
+using System.Data;
+using System.Drawing;
+using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading.Tasks;
-using Chess.Core.Pieces;
 
 namespace Chess.Core
 {
@@ -16,7 +16,7 @@ namespace Chess.Core
             if ((newRow < 0) || (newRow >= board.Size)) return false;
 
             var newCol = currPiece.CurrentLocation.Column + deltaCol;
-            if ((newCol < 0) || (newCol >= board.Size)) return false;
+            if ((newCol < 0) || (newCol >= board.Size)) return false;           
 
             location = new BoardLocation(newRow, newCol);
             return true;
@@ -33,8 +33,8 @@ namespace Chess.Core
 
             if (kingInCheck)
                 return GenerateMovesToEscapeCheck(board, piece, range, templates);
-
-            return piece is Pawn ?
+                
+            return piece is Pawn ? 
                 GeneratePawnMoves(board, (Pawn)piece, templates) :
                 GenerateDefaultTemplateMoves(board, piece, range, templates);
         }
@@ -54,7 +54,6 @@ namespace Chess.Core
                     {
                         if (IsSameColor(board, piece, newLocation))
                             break;
-
                         if (CollidesIntoOpponentPiece(board, piece, newLocation.Row, newLocation.Column, out Tile? collidingLocation))
                         {
                             if (collidingLocation != null)
@@ -78,7 +77,7 @@ namespace Chess.Core
         internal static bool MovePutsKingInCheck(Board board, Tile from, Tile to)
         {
             var tmpBoard = board.Copy();
-
+            
             var attackerColor = tmpBoard.GetTile(from.Row, from.Column).Piece.Color == 'w' ? 'b' : 'w';
             tmpBoard.MovePiece(from, to);
 
@@ -112,21 +111,18 @@ namespace Chess.Core
 
                 if (!IsKingInCheck(tmpBoard, attackerColor))
                     ret.Add(new Tile(tmpTo.Row, tmpTo.Column));
-
                 tmpBoard.UndoMove();
             }
 
             return ret;
         }
 
-
-
         private static IList<Tile> GeneratePawnMoves(Board board, Pawn pawn, IEnumerable<int[]> templates)
         {
             var moves = new List<Tile>();
 
             if (!PawnHasPieceInfront(board, pawn))
-                moves.AddRange(GenerateDefaultTemplateMoves(board, pawn, 1, templates).ToList());
+            moves.AddRange(GenerateDefaultTemplateMoves(board, pawn, 1, templates).ToList());
 
             if (PawnIsInOpeningSpace(pawn, pawn.CurrentLocation.Row))
             {
@@ -135,7 +131,6 @@ namespace Chess.Core
                 if (secondSpace != null)
                     moves.Add(secondSpace);
             }
-
             moves.AddRange(GetPawnDiagonalCaptures(board, pawn));
 
             return moves;
@@ -183,6 +178,7 @@ namespace Chess.Core
             return ret;
         }
 
+
         private static bool IsKingInCheck(Board board, char attackerColor)
         {
             var kingPos = attackerColor == 'w' ? board.BlackKingLocation : board.WhiteKingLocation;
@@ -219,16 +215,13 @@ namespace Chess.Core
             else
                 return true;
         }
-
         private static bool CollidesIntoOpponentPiece(Board board, IPiece piece, int newRow, int newCol, out Tile? collidingLocation)
         {
             collidingLocation = null;
-
             if (piece is Knight) return false;
 
             Tile? newLoc = board.GetTile(newRow, newCol);
             if (newLoc == null) return false;
-
 
             if (newLoc.Piece != null)
             {
@@ -238,7 +231,6 @@ namespace Chess.Core
 
             return false;
         }
-
         internal static bool MoveIsValid(Board board, Tile from, Tile to)
         {
             var piece = board.GetPiece(from.Row, from.Column);

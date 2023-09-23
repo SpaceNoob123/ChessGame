@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Chess.Core.UDP
 {
@@ -15,8 +17,8 @@ namespace Chess.Core.UDP
             get => _userConnections.Count;
         }
 
-        public string IpAddress
-        {
+        public string IpAddress 
+        { 
             get => _listenOn.Address.ToString();
         }
 
@@ -33,6 +35,7 @@ namespace Chess.Core.UDP
             _listenOn = endpoint;
             Client = new System.Net.Sockets.UdpClient(_listenOn);
         }
+
 
         public void StartListening()
         {
@@ -60,7 +63,6 @@ namespace Chess.Core.UDP
             foreach (var endpoint in _userConnections.Keys)
                 Client.Send(datagram, datagram.Length, endpoint);
         }
-
         private bool TryStoreUserConnection(string name, IPEndPoint clientEnpoint)
         {
             return _userConnections.TryAdd(clientEnpoint, name);
@@ -97,6 +99,7 @@ namespace Chess.Core.UDP
 
                     if (isNewConnection && UsersConnected <= 2)
                     {
+                        
                         foreach (var p in _packetHistory)
                             Reply(p, packet.SenderEndpointParsed);
 
@@ -117,17 +120,12 @@ namespace Chess.Core.UDP
                     break;
 
                 case PacketType.Disconnect:
-
                     DisconnectUser(packet.SenderEndpointParsed);
-                    ReplyAll(new Packet("SERVER", packet.Payload, PacketType.Message));
+                    ReplyAll(new Packet("SERVER" , packet.Payload, PacketType.Message));
                     break;
 
                 case PacketType.Message:
-
-
                     ReplyAll(packet);
-
-
                     break;
                 default:
                     break;

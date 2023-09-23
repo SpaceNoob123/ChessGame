@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics.Contracts;
 
 namespace Chess.Core.Pieces
 {
     public class King : Piece
     {
+
         public King() : base()
         {
             _symbol = 'k';
@@ -33,7 +30,7 @@ namespace Chess.Core.Pieces
         public override IList<Tile> GetValidMoves(Board board)
         {
             var moves = Movement.GetMoves(board, this, 1, MoveTemplates);
-
+           
             return moves;
         }
 

@@ -1,9 +1,8 @@
-﻿using Newtonsoft.Json;
-using System.Net.Sockets;
-using System.Net;
-using System.Xml.Linq;
+﻿using Chess.Core;
 using Chess.Core.UDP;
-using Chess.Core;
+using Newtonsoft.Json;
+using System.Net;
+using System.Net.Sockets;
 
 namespace ChessServer
 {
@@ -23,13 +22,14 @@ namespace ChessServer
             Console.SetWindowPosition(0, 0);
             Console.SetWindowSize(60, 40);
             Console.CursorVisible = false;
+                       
 
             int port = args.Length == 1 ? Convert.ToInt32(args[0]) : 32123;
 
             _server = new UdpListener(new IPEndPoint(IPAddress.Any, port), 2);
             _server.OnPacketReceived += Server_OnPacketRecieved;
             _server.StartListening();
-
+            
             Console.WriteLine($"SERVER STARTED...");
             Console.WriteLine($"clients can access it on {GetLocalIpAddress()}:{port}\n");
 
@@ -91,7 +91,6 @@ namespace ChessServer
             _server.ReplyAll(new Packet("SERVER", payload, PacketType.GameEnd));
             Console.WriteLine(payload);
         }
-
         private static void Server_OnPacketRecieved(Packet packet)
         {
             switch (packet.Type)
@@ -120,7 +119,7 @@ namespace ChessServer
                     break;
 
                 case PacketType.Move:
-
+                    
                     var move = JsonConvert.DeserializeObject<Tuple<Tile, Tile>>(packet.Payload, new JsonSerializerSettings
                     {
                         TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto,
@@ -129,6 +128,7 @@ namespace ChessServer
 
                     var from = _game.Board.GetTile(move.Item1.Row, move.Item1.Column);
                     var to = _game.Board.GetTile(move.Item2.Row, move.Item2.Column);
+
                     if (_game.Board.TryMakeMove(from, to))
                     {
                         _game.SwapTurn();

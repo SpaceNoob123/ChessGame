@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Chess.Core.Pieces
+﻿namespace Chess.Core.Pieces
 {
     public class Pawn : Piece
     {
@@ -21,7 +15,7 @@ namespace Chess.Core.Pieces
         private static int[][] PawnTemplates(Pawn pawn)
         {
             var direction = Movement.GetDirection(pawn);
-            return new int[][] { new[] { direction, 0 } };
+            return new int[][] { new[] { direction, 0 }};
         }
 
 
@@ -31,5 +25,8 @@ namespace Chess.Core.Pieces
 
             return moves;
         }
+      
+
+        
     }
 }

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
 
 namespace Chess.Core
 {
     public class Tile
     {
+
         public IPiece? Piece { get; set; }
         public int Row { get; set; }
         public int Column { get; set; }
@@ -22,7 +18,6 @@ namespace Chess.Core
             Piece = null;
         }
 
-
         public Tile(int row, int col, IPiece? piece)
         {
             Row = row;
@@ -32,7 +27,6 @@ namespace Chess.Core
 
         [JsonConstructor]
         public Tile() { }
-
 
 
         public string GetDisplayCoordinates()

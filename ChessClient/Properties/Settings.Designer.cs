@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ChessClient.Properties
+namespace Chess.Properties
 {
 
 

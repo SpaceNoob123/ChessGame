@@ -1,12 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using JsonIgnoreAttribute = Newtonsoft.Json.JsonIgnoreAttribute;
 
 namespace Chess.Core.UDP
 {
@@ -25,7 +23,6 @@ namespace Chess.Core.UDP
 
     public class Packet
     {
-        #region get only props
 
         [JsonIgnore]
         public IPEndPoint SenderEndpointParsed
@@ -39,7 +36,6 @@ namespace Chess.Core.UDP
             }
         }
 
-        #endregion
 
         public string Payload { get; set; }
         public string SenderName { get; set; }
@@ -57,10 +53,11 @@ namespace Chess.Core.UDP
         }
 
 
+
         public static string Serialize(Packet packet)
         {
             return JsonConvert.SerializeObject(packet);
-        }
+        }   
 
         public static Packet Deserialize(string packetJson)
         {

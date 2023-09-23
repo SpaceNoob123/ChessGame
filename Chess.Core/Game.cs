@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using Chess.Core.Pieces;
+﻿using Chess.Core.Pieces;
 using Chess.Core.UDP;
+using Newtonsoft.Json;
 
 namespace Chess.Core
 {
@@ -15,12 +10,12 @@ namespace Chess.Core
         public event KingChecked OnKingChecked;
 
         public delegate void GameOver();
-        public event GameOver OnGameOver;
+        public event GameOver OnGameOver;    
 
         public Board Board { get; set; }
         public Player Player1 { get; set; }
         public Player Player2 { get; set; }
-
+        
         public char Turn { get; set; } = 'w';
 
         private bool _isGameOver = false;
@@ -39,9 +34,10 @@ namespace Chess.Core
         [JsonConstructor]
         public Game() { }
 
+
         public void StartGame()
         {
-
+            
         }
 
         public void SwapTurn()

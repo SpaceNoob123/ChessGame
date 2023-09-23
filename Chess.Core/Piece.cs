@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Chess.Core
+﻿namespace Chess.Core
 {
     public abstract class Piece : IPiece
     {
-
 
         protected BoardLocation _currentLocation;
         protected char _symbol;
@@ -59,7 +52,7 @@ namespace Chess.Core
 
         public override string ToString()
         {
-
+            
             return $"{Color} {Symbol} at {CurrentLocation}";
         }
 
