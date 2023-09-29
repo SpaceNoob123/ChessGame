@@ -1,6 +1,7 @@
 ﻿using Chess.Core;
 using Chess.Core.UDP;
 using Newtonsoft.Json;
+using System.Data.SqlClient;
 using System.Net;
 using System.Net.Sockets;
 
@@ -16,7 +17,6 @@ namespace ChessServer
         private static bool _gameStarted = false;
         private static Player _p1;
         private static Player _p2;
-
         public static async Task Main(string[] args)
         {
             Console.SetWindowPosition(0, 0);
@@ -90,6 +90,28 @@ namespace ChessServer
 
             _server.ReplyAll(new Packet("SERVER", payload, PacketType.GameEnd));
             Console.WriteLine(payload);
+            try
+            {
+                using (SqlConnection connection = new SqlConnection("Server=DESKTOP-FCKMF1K\\SQLEXPRESS;Database=ChessGame;Integrated Security=True;"))
+                {
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand("INSERT INTO ChessGameResults (WinnerName, Date) VALUES (@WinnerName, @Date)", connection))
+                    {
+                        command.Parameters.AddWithValue("@WinnerName", winnerName);
+                        command.Parameters.AddWithValue("@Date", DateTime.Now);
+
+                        command.ExecuteNonQuery();
+                    }
+
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+            
         }
         private static void Server_OnPacketRecieved(Packet packet)
         {
